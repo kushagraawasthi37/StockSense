@@ -1,371 +1,214 @@
-# Retail Sales Forecasting & Inventory Optimization System
 
-## Project Overview
+# StockSense — Smart Inventory Planning and Demand Forecasting
 
-Retail businesses often struggle to maintain the correct inventory levels. If too much stock is stored, it increases storage and holding costs. If too little stock is available, products go out of stock and businesses lose sales.
+StockSense is a machine learning-powered inventory planning system designed for NeuralShop. It forecasts product demand using historical sales data and generates data-driven inventory recommendations to help reduce stockouts and unnecessary inventory holding costs.
 
-This project solves that problem by using Machine Learning to predict future product demand and recommend the correct inventory levels.
+## Why StockSense?
 
-The system forecasts future sales using historical retail data and then calculates:
+Currently, NeuralShop relies on hard-coded logic for certain inventory-related decisions. Such logic cannot dynamically adapt to changing demand patterns, seasonal trends, or promotional effects.
 
-* Reorder Point
-* Safety Stock
-* Recommended Order Quantity
+StockSense explores how machine learning can make inventory planning more intelligent by forecasting future demand and recommending when and how much stock should be replenished.
 
-This project simulates how companies such as Amazon, Walmart, Flipkart, Reliance Retail, D-Mart, and BigBasket use sales forecasting and inventory optimization to improve their business operations.
+**The objective is to gradually move from static inventory rules toward data-driven inventory decisions.**
 
----
+> StockSense currently serves as a standalone forecasting prototype. Integration with NeuralShop's backend is a planned enhancement, not an existing feature.
 
-## Problem Statement
+## Key Features
 
-Retail companies need to know:
+- Historical retail sales analysis
+- Data preprocessing and exploratory data analysis
+- Feature engineering for demand forecasting
+- Sales prediction using Random Forest Regressor
+- Safety stock calculation
+- Reorder point calculation
+- Recommended order quantity generation
+- Interactive Streamlit dashboard
+- KPI cards and business insights
+- Actual vs. predicted sales visualization
+- Exportable forecast and inventory recommendation results
 
-* How much stock should be maintained?
-* When should inventory be reordered?
-* How many units should be purchased?
+## Technology Stack
 
-Without proper forecasting:
+- **Language:** Python
+- **Data Processing:** Pandas, NumPy
+- **Machine Learning:** Scikit-learn
+- **Model Persistence:** Joblib
+- **Visualization:** Matplotlib
+- **Dashboard:** Streamlit
 
-* Overstocking increases cost
-* Understocking causes stockouts and lost sales
-* Inventory planning becomes inefficient
+## Machine Learning Approach
 
-The objective of this project is to build an end-to-end system that:
+StockSense uses a Random Forest Regressor to predict sales demand from historical retail data.
 
-1. Predicts future sales demand
-2. Calculates optimal inventory levels
-3. Prevents stock shortages and overstocking
-4. Supports better business decisions
+### Input Features
 
----
+- Price
+- Promotion indicator
+- Weekday, day, month, and year
+- Previous-day sales
+- Sales from seven days earlier
+- Seven-day average sales
 
-## Industry Relevance
+**Target:** Predicted sales quantity.
 
-Retail and e-commerce companies use forecasting systems to:
+The model is trained using historical data and can be evaluated by comparing actual sales against predicted sales. Forecast accuracy depends on data quality, feature engineering, and validation methodology.
 
-* Predict future product demand
-* Plan inventory in advance
-* Improve customer satisfaction
-* Reduce warehouse cost
-* Increase profit
+## Inventory Optimization
 
-Companies such as Amazon, Walmart, Flipkart, Reliance Retail, D-Mart, and BigBasket use similar systems in their supply chain and inventory planning process.
+StockSense converts demand forecasts into practical inventory recommendations.
 
----
+### 1. Safety Stock
 
-## Features
+Additional inventory maintained to help absorb unexpected demand or supply delays.
 
-* Historical retail sales analysis
-* Data preprocessing and cleaning
-* Feature engineering
-* Sales forecasting using Machine Learning
-* Inventory optimization logic
-* Reorder Point calculation
-* Safety Stock calculation
-* Recommended Order Quantity generation
-* Interactive Streamlit dashboard
-* KPI cards and business insights
-* Actual vs Predicted sales visualization
-* Inventory recommendation output
+### 2. Reorder Point
 
----
+The inventory level at which replenishment should be initiated.
 
-## Tech Stack
+**Formula:**
 
-* Python
-* Pandas
-* NumPy
-* Scikit-learn
-* Joblib
-* Matplotlib
-* Streamlit
+Reorder Point = Average Daily Demand × Lead Time + Safety Stock
 
----
+### 3. Recommended Order Quantity
 
-## Project Workflow
+Estimates the additional stock required to reach the desired inventory level.
 
-1. Load historical retail sales data
-2. Clean and preprocess the dataset
-3. Perform exploratory data analysis
-4. Create forecasting features such as:
+**Formula:**
 
-   * Previous day sales
-   * Sales 7 days ago
-   * Rolling average sales
-5. Train the machine learning model
-6. Predict future sales demand
-7. Calculate inventory metrics:
+Recommended Order = max(0, Target Stock Level − Current Stock)
 
-   * Safety Stock
-   * Reorder Point
-   * Recommended Order Quantity
-8. Display results in a Streamlit dashboard
+The target stock level should account for forecast demand over the relevant replenishment period and any required safety stock.
 
----
-
-## Machine Learning Model Used
-
-This project uses a Random Forest Regressor model because:
-
-* It works well for sales prediction
-* It can handle non-linear relationships
-* It is beginner-friendly
-* It provides good accuracy without requiring advanced tuning
-
-Input features used:
-
-* Price
-* Promotion
-* Weekday
-* Month
-* Day
-* Year
-* Previous Day Sales
-* Sales 7 Days Ago
-* 7-Day Average Sales
-
-Target:
-
-* Predicted Sales Quantity
-
----
-
-## Inventory Optimization Logic
-
-After forecasting sales, the project calculates:
-
-### Safety Stock
-
-Additional stock maintained to avoid stockouts.
-
-### Reorder Point
-
-The stock level at which new inventory should be ordered.
-
-Formula:
-
-Reorder Point = Predicted Sales × Lead Time
-
-### Recommended Order Quantity
-
-Recommended Order = Reorder Point − Current Stock
-
-If current stock is already sufficient, recommended order becomes 0.
-
----
-
-## KPI Metrics Displayed
-
-The dashboard shows these business KPIs:
-
-* Forecast Sales
-* Current Stock
-* Reorder Point
-* Recommended Order Quantity
-
----
+> Inventory calculations depend on the units and time horizon of the forecast, supplier lead time, and available stock data. These assumptions must be configured consistently.
 
 ## Project Structure
 
 ```text
-Retail-Sales-Forecasting-Inventory-Optimization/
-│
+StockSense/
 ├── app/
 │   └── streamlit_app.py
-│
 ├── data/
 │   └── raw/
 │       └── retail_sales_sample.csv
-│
 ├── models/
 │   └── retail_forecast_model.pkl
-│
 ├── outputs/
 │   ├── forecast_results.csv
 │   └── inventory_recommendations.csv
-│
 ├── images/
 │   ├── dashboard.png
 │   ├── kpi_cards.png
 │   ├── actual_vs_predicted.png
 │   ├── inventory_recommendation.png
 │   └── final_dashboard.png
-│
 ├── src/
 │   ├── data_preprocessing.py
 │   ├── feature_engineering.py
 │   ├── inventory_logic.py
 │   ├── train_model.py
 │   └── visualize.py
-│
-├── README.md
+├── main.py
 ├── requirements.txt
 ├── .gitignore
-└── main.py
-
+└── README.md
 ```
 
----
+*Adjust this structure to match the files actually present in the repository.*
 
-## Installation Steps
+## Installation and Setup
 
-### Windows
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/kushagraawasthi37/StockSense.git
+cd StockSense
+```
+
+### 2. Create a Virtual Environment
+
+**Windows**
 
 ```bash
 python -m venv venv
 venv\Scripts\activate
-pip install -r requirements.txt
-streamlit run app/streamlit_app.py
 ```
 
-### Mac/Linux
+**macOS/Linux**
 
 ```bash
 python3 -m venv venv
 source venv/bin/activate
+```
+
+### 3. Install Dependencies
+
+```bash
 pip install -r requirements.txt
-streamlit run app/streamlit_app.py
 ```
 
----
-
-## Requirements
-
-```text
-streamlit
-pandas
-numpy
-scikit-learn
-joblib
-matplotlib
-```
-
----
-
-## How to Run the Project
-
-1. Clone or download the repository
-2. Open the project folder in VS Code
-3. Install the required libraries
-4. Run the Streamlit dashboard
+### 4. Run the Dashboard
 
 ```bash
 streamlit run app/streamlit_app.py
 ```
 
-5. Open the local URL shown in the terminal
-6. Enter retail input values
-7. Click "Predict Sales and Inventory"
-8. View forecast and inventory recommendations
+Open the local URL displayed in the terminal to access the dashboard.
 
----
+## Dashboard Metrics
 
-## Sample Output
+The dashboard is designed to display:
 
-Example Dashboard Output:
+- Forecast sales
+- Current stock
+- Reorder point
+- Recommended order quantity
+- Actual vs. predicted sales
 
-* Forecast Sales: 40.3 units
-* Current Stock: 150 units
-* Reorder Point: 282.1 units
-* Recommended Order: 132.1 units
+Example values should be treated as illustrative unless generated from a real model run.
 
----
+## Planned NeuralShop Integration
 
-## Dashboard Screenshots
+StockSense can be integrated into NeuralShop as a separate Python-based forecasting service while keeping the existing Node.js backend responsible for core e-commerce operations.
 
-### Dashboard Home
+A possible integration workflow:
 
-![Dashboard](images/dashboard.png)
-![Dashboard](images/dashboard1.1.png)
-### KPI Cards
+1. Collect historical sales and product inventory data from NeuralShop.
+2. Prepare and validate the data for forecasting.
+3. Generate demand predictions using the trained ML model.
+4. Calculate reorder points and recommended order quantities.
+5. Expose forecasts through a Python API.
+6. Allow NeuralShop's backend to consume the recommendations.
+7. Display inventory insights in the admin dashboard.
+8. Introduce low-stock alerts and purchase order suggestions.
 
-![KPI Cards](images/kpi_cards.png)
+The integration should be implemented and tested before these capabilities are described as live features.
 
-### Actual vs Predicted Graph
+## Future Enhancements
 
-![Actual vs Predicted](images/actual_vs_predicted.png)
-
-### Inventory Recommendation
-
-![Inventory Recommendation](images/inventory_recommendation.png)
-
----
+- Product-level and multi-store forecasting
+- Festival, holiday, and seasonal demand analysis
+- Promotion and price impact modelling
+- Model evaluation and comparison with XGBoost, ARIMA, and Prophet
+- Inventory anomaly detection
+- Supplier lead-time optimization
+- Low-stock alerts and automated replenishment workflows
+- PostgreSQL integration for inventory and sales data
+- Cloud deployment
+- Explainable forecasts and feature importance
+- Conversational inventory insights
 
 ## Business Value
 
-This project helps businesses:
+StockSense explores how machine learning can help retail and e-commerce businesses:
 
-* Reduce inventory holding cost
-* Avoid stockouts
-* Improve customer satisfaction
-* Increase sales
-* Optimize inventory planning
-* Make better supply chain decisions
-
----
-
-## Learning Outcomes
-
-Through this project, I learned:
-
-* Data preprocessing
-* Exploratory Data Analysis
-* Feature Engineering
-* Machine Learning for forecasting
-* Inventory optimization logic
-* Streamlit dashboard development
-* GitHub project documentation
-* Real-world business problem solving
-
----
-
-
-### Planned Enhancements
-
-* Multi-store forecasting support
-* Product-level forecasting for multiple SKUs
-* Region-wise demand prediction
-* Promotional campaign and discount impact modeling
-* Price elasticity analysis
-* Weather-based forecasting
-* Holiday and festival sales prediction
-* Real-time dashboard updates
-* Automatic purchase order generation
-* Low stock alerts and reorder alerts
-* Downloadable Excel and PDF reports
-* Integration with ERP systems such as SAP or Oracle
-* Cloud deployment using Streamlit Cloud, AWS, or Heroku
-* Role-based access for store managers and analysts
-* Inventory anomaly detection
-
-### Advanced Machine Learning Improvements
-
-* Use ARIMA for time-series forecasting
-* Use Prophet for seasonality forecasting
-* Use XGBoost for higher forecasting accuracy
-* Use LSTM for deep learning-based prediction
-* Build ensemble forecasting models
-* Add feature importance and explainability
-
-### Future Business Extensions
-
-* Supplier lead time optimization
-* Demand forecasting for different cities and regions
-* Warehouse-wise inventory planning
-* Category-wise and brand-wise sales prediction
-* Integration with a database such as MySQL or PostgreSQL
-* Chatbot for answering questions such as:
-
-  * How much stock should be ordered?
-  * Which product is likely to go out of stock?
-  * Which product category is growing fastest?
-
-
-
-
-
+- Anticipate future product demand
+- Reduce stockout risk
+- Minimize excess inventory
+- Improve replenishment planning
+- Make more informed purchasing decisions
 
 ## Author
 
-Swetha K
+**Kushagra**
 
+Developed as part of the NeuralShop ecosystem to explore machine learning applications in retail demand forecasting and inventory optimization.
